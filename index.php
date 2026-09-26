@@ -1,6 +1,6 @@
 <?php
 
-$pdo = require_once __DIR__ . '/db.php';
+$pdo = require_once 'db.php';
 
 $raw = file_get_contents('sites.json');
 $data = json_decode($raw, true);
@@ -20,13 +20,17 @@ foreach ($data as $url) {
     curl_close($ch);
 
     $url = $info['url'];
-    $httpCode = $info['http_code'];
-    $totalTime = round($info['total_time'] * 1000) .  ' ms';
+    $code = $info['http_code'];
+    $totalTime = round($info['total_time'] * 1000);
+    $timeToSave = ($code === 0) ? null : $totalTime;
 
-    if ($httpCode === 0) {
-        echo "Site: '$url' | Code: [DOWN] | ERROR: Could not resolve host";
+    if ($code === 0) {
+        echo "Site: '$url' | Code: DOWN | ERROR: Could not resolve host";
     } else {
-        echo "Site: '$url' | Code: $httpCode | Total_time: $totalTime";
+        echo "Site: '$url' | Code: $code | Total_time: $totalTime ms";
     }
+
+    $stmt = $pdo->prepare('INSERT INTO checks (status_code, url, response_time) VALUES (?,?,?)');
+    $stmt->execute([$code, $url, $timeToSave]);
     echo '<br>';
 }
