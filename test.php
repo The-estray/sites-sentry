@@ -1,30 +1,32 @@
 <?php
 
-$raw = file_get_contents('sites.json');
-$data = json_decode($raw, true);
+// $pdo = require_once __DIR__ . '/db.php';
 
-foreach ($data as $url) {
-    $ch = curl_init();
+// $raw = file_get_contents('sites.json');
+// $data = json_decode($raw, true);
 
-    $options = [
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_URL => $url,
-    ];
+// foreach ($data as $url) {
+//     $ch = curl_init();
 
-    curl_setopt_array($ch, $options);
+//     $options = [
+//         CURLOPT_RETURNTRANSFER => true,
+//         CURLOPT_URL => $url,
+//     ];
 
-    $res = curl_exec($ch);
-    $info = curl_getinfo($ch);
-    curl_close($ch);
+//     curl_setopt_array($ch, $options);
 
-    $url = $info['url'];
-    $httpCode = $info['http_code'];
-    $totalTime = round($info['total_time'] * 1000) .  ' ms';
+//     $res = curl_exec($ch);
+//     $info = curl_getinfo($ch);
+//     curl_close($ch);
 
-    if ($httpCode === 0) {
-        echo "Site: '$url' | Code: [DOWN] | ERROR: Could not resolve host";
-    } else {
-        echo "Site: '$url' | Code: $httpCode | Total_time: $totalTime";
-    }
-    echo '<br>';
+//     $url = $info['url'];
+//     $httpCode = $info['http_code'];
+//     $totalTime = round($info['total_time'] * 1000) .  ' ms';
+
+//     if ($httpCode === 0) {
+//         echo "Site: '$url' | Code: [DOWN] | ERROR: Could not resolve host";
+//     } else {
+//         echo "Site: '$url' | Code: $httpCode | Total_time: $totalTime";
+//     }
+//     echo '<br>';
 }
